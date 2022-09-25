@@ -256,13 +256,14 @@ def md_summary(year: int | None = None, season: MediaSeason | None = None):
     year, season = get_season(year, season)
 
     medias = get_anime(season=season, year=year)
-    medias_format = cytoolz.groupby(attrgetter('format'), medias)
+    medias_format: dict[str, list[Media]] = cytoolz.groupby(attrgetter('format'), medias)
     print(f"# Saisonniers {season.value} {year}")
 
     for format, format_medias in medias_format.items():
         print(f"\n### {format or 'Unknown'}\n".replace('_', ' '))
         for media in sorted(format_medias, key=attrgetter('startDate')):
-            print(f"- [ ] {media.title.userPreferred}")
+            print(f"- [ ] [{{AL}}](https://anilist.co/anime/{media.id}) "
+                  f"{media.title.userPreferred}")
 
 
 @app.command()
