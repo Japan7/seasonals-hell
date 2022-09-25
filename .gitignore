@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+
+# for macOS pleb
+.DS_Store
+
+.envrc
+.direnv
+.autoenv.zsh
+.vim
+.vim-arsync
+
+# VS Code things
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+.devcontainer/pypoetry/

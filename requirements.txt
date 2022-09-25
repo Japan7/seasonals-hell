@@ -1,0 +1,4 @@
+cytoolz
+pydantic
+requests
+typer
