@@ -260,7 +260,7 @@ def md_summary(year: int | None = None, season: MediaSeason | None = None):
     print(f"# Saisonniers {season.value} {year}")
 
     for format, format_medias in medias_format.items():
-        print(f"\n### {format}\n".replace('_', ' '))
+        print(f"\n### {format or 'Unknown'}\n".replace('_', ' '))
         for media in sorted(format_medias, key=attrgetter('startDate')):
             print(f"- [ ] {media.title.userPreferred}")
 
