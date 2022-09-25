@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from typing import Optional
-from operator import attrgetter
-
+import datetime
 import enum
+import functools
+from operator import attrgetter
+from typing import Optional
+
+import cytoolz
 import pydantic
 import requests
-import functools
-import cytoolz
 import typer
 
 
@@ -193,10 +194,6 @@ class MediaListCollection(pydantic.BaseModel):
 app = typer.Typer()
 
 
-SEASON = MediaSeason.SPRING
-YEAR = 2022
-
-
 user_query = """
 query ($username: String, $type: MediaType) {
   MediaListCollection(userName: $username, type: $type, status_not: PLANNING) {
@@ -234,9 +231,31 @@ def get_userlist(username: str) -> list[MediaEntry]:
     return list(cytoolz.concat(l.entries for l in user_list.lists))
 
 
+def get_season(year: int | None = None,
+               season: MediaSeason | None = None) -> tuple[int, MediaSeason]:
+
+    date = datetime.datetime.now()
+    if year is None:
+        year = date.year if date.month < 12 else date.year + 1
+
+    if season is None:
+        if date.month < 2 or date.month == 12:
+            season = MediaSeason.WINTER
+        elif date.month < 5:
+            season = MediaSeason.SPRING
+        elif date.month < 8:
+            season = MediaSeason.SUMMER
+        else:
+            season = MediaSeason.FALL
+
+    return year, season
+
+
 @app.command()
-def md_summary():
-    medias = get_anime(season=SEASON, year=YEAR)
+def md_summary(year: int | None = None, season: MediaSeason | None = None):
+    year, season = get_season(year, season)
+
+    medias = get_anime(season=season, year=year)
     medias_format = cytoolz.groupby(attrgetter('format'), medias)
     for format, format_medias in medias_format.items():
         print(f"### {format}".replace('_', ' '))
@@ -245,8 +264,12 @@ def md_summary():
 
 
 @app.command()
-def user_progress(username: str):
-    medias: list[Media] = get_anime(season=SEASON, year=YEAR)
+def user_progress(username: str,
+                  year: int | None = None,
+                  season: MediaSeason | None = None):
+    year, season = get_season(year, season)
+
+    medias: list[Media] = get_anime(season=season, year=year)
     user_list: list[MediaEntry] = get_userlist(username)
 
     user_media_ids: set[int] = set(e.mediaId for e in user_list)
