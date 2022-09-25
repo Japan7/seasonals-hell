@@ -92,10 +92,10 @@ class AnimePage(pydantic.BaseModel):
 
 
 class MediaSeason(enum.Enum):
-    WINTER = "WINTER"
-    SPRING = "SPRING"
-    SUMMER = "SUMMER"
-    FALL = "FALL"
+    WINTER = "hivers"
+    SPRING = "printemps"
+    SUMMER = "été"
+    FALL = "automne"
 
 
 season_query = """
@@ -145,7 +145,7 @@ AL_URL = 'https://graphql.anilist.co'
 def get_anime(season: MediaSeason, year: int, page: int = 1) -> list[Media]:
     variables = {
         "page": page,
-        "season": season.value,
+        "season": season.name,
         "year": year
     }
 
@@ -257,8 +257,10 @@ def md_summary(year: int | None = None, season: MediaSeason | None = None):
 
     medias = get_anime(season=season, year=year)
     medias_format = cytoolz.groupby(attrgetter('format'), medias)
+    print(f"# Saisonniers {season.value} {year}")
+
     for format, format_medias in medias_format.items():
-        print(f"### {format}".replace('_', ' '))
+        print(f"\n### {format}\n".replace('_', ' '))
         for media in sorted(format_medias, key=attrgetter('startDate')):
             print(f"- [ ] {media.title.userPreferred}")
 
