@@ -231,8 +231,8 @@ def get_userlist(username: str) -> list[MediaEntry]:
     return list(toolz.concat(l.entries for l in user_list.lists))
 
 
-def get_season(year: int | None = None,
-               season: MediaSeason | None = None) -> tuple[int, MediaSeason]:
+def get_season(year: Optional[int] = None,
+               season: Optional[MediaSeason] = None) -> tuple[int, MediaSeason]:
 
     date = datetime.datetime.now()
     if year is None:
@@ -252,7 +252,7 @@ def get_season(year: int | None = None,
 
 
 @app.command()
-def md_summary(year: int | None = None, season: MediaSeason | None = None):
+def md_summary(year: Optional[int] = None, season: Optional[MediaSeason] = None):
     year, season = get_season(year, season)
 
     medias = get_anime(season=season, year=year)
@@ -268,8 +268,8 @@ def md_summary(year: int | None = None, season: MediaSeason | None = None):
 
 @app.command()
 def user_progress(username: str,
-                  year: int | None = None,
-                  season: MediaSeason | None = None):
+                  year: Optional[int] = None,
+                  season: Optional[MediaSeason] = None):
     year, season = get_season(year, season)
 
     medias: list[Media] = get_anime(season=season, year=year)
