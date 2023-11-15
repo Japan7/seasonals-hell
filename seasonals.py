@@ -155,7 +155,7 @@ def get_anime(season: MediaSeason, year: int, page: int = 1) -> list[Media]:
     }
 
     resp = requests.post(AL_URL, json=data)
-    page_resp = AnimePage.parse_obj(resp.json()["data"]["Page"])
+    page_resp = AnimePage.model_validate(resp.json()["data"]["Page"])
 
     medias: list[Media] = []
     for media in page_resp.media:
@@ -226,7 +226,7 @@ def get_userlist(username: str) -> list[MediaEntry]:
     if req.status_code != 200:
         print(req.json())
         req.raise_for_status()
-    user_list = MediaListCollection.parse_obj(req.json()['data']['MediaListCollection'])
+    user_list = MediaListCollection.model_validate(req.json()['data']['MediaListCollection'])
 
     return list(toolz.concat(l.entries for l in user_list.lists))
 
