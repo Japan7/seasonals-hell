@@ -1,4 +1,4 @@
-cytoolz
 pydantic
 requests
+toolz
 typer

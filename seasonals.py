@@ -7,7 +7,7 @@ import functools
 from operator import attrgetter
 from typing import Optional
 
-import cytoolz
+import toolz
 import pydantic
 import requests
 import typer
@@ -228,7 +228,7 @@ def get_userlist(username: str) -> list[MediaEntry]:
         req.raise_for_status()
     user_list = MediaListCollection.parse_obj(req.json()['data']['MediaListCollection'])
 
-    return list(cytoolz.concat(l.entries for l in user_list.lists))
+    return list(toolz.concat(l.entries for l in user_list.lists))
 
 
 def get_season(year: int | None = None,
@@ -256,7 +256,7 @@ def md_summary(year: int | None = None, season: MediaSeason | None = None):
     year, season = get_season(year, season)
 
     medias = get_anime(season=season, year=year)
-    medias_format: dict[str, list[Media]] = cytoolz.groupby(attrgetter('format'), medias)
+    medias_format: dict[str, list[Media]] = toolz.groupby(attrgetter('format'), medias)
     print(f"# Saisonniers {season.value} {year}")
 
     for format, format_medias in medias_format.items():
