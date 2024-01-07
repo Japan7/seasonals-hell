@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "seasonals-hell"
+dynamic = ["version"]
+license = {file = "LICENSE"}
+dependencies = [
+    "pydantic",
+    "requests",
+    "toolz",
+    "typer",
+]
+
+[project.urls]
+Homepage = "https://github.com/Japan7/seasonals-hell"
+Repository = "https://github.com/Japan7/seasonals-hell.git"
+Issues = "https://github.com/Japan7/seasonals-hell/issues"
+
+[project.scripts]
+seasonals-hell = "seasonals_hell.seasonals:app"
+
+[tool.hatch.version]
+path = "seasonals_hell/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/seasonals_hell",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["seasonals_hell"]

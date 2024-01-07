@@ -2,20 +2,20 @@
 
 # Installation
 
-(please use a venv)
-
 ```sh
-pip install -r requirements.txt
+pipx install git+https://github.com/Japan7/seasonals-hell
 ```
+
+(or install in a venv)
 
 # Usage
 
 Generate markdown summary for the seasonals hell pad:
 ```sh
-python seasonals.py md-summary
+seasonals-hell md-summary
 ```
 
 List remaining anime to watch for a given user:
 ```sh
-python seasonals.py user-progress <anilist_username>
+seasonals-hell user-progress <anilist_username>
 ```
