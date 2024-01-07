@@ -1,4 +1,0 @@
-pydantic
-requests
-toolz
-typer
