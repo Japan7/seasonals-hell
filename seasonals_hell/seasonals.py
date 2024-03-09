@@ -18,10 +18,11 @@ from __future__ import annotations
 import datetime
 import enum
 import functools
+import itertools
+from collections import defaultdict
 from operator import attrgetter
 from typing import Optional
 
-import toolz
 import pydantic
 import requests
 import typer
@@ -242,7 +243,7 @@ def get_userlist(username: str) -> list[MediaEntry]:
         req.raise_for_status()
     user_list = MediaListCollection.model_validate(req.json()['data']['MediaListCollection'])
 
-    return list(toolz.concat(l.entries for l in user_list.lists))
+    return list(itertools.chain.from_iterable(l.entries for l in user_list.lists))
 
 
 def get_season(year: Optional[int] = None,
@@ -270,7 +271,10 @@ def md_summary(year: Optional[int] = None, season: Optional[MediaSeason] = None)
     year, season = get_season(year, season)
 
     medias = get_anime(season=season, year=year)
-    medias_format: dict[str, list[Media]] = toolz.groupby(attrgetter('format'), medias)
+    medias_format: dict[str | None, list[Media]] = defaultdict(list)
+    for media in medias:
+        medias_format[media.format].append(media)
+
     print(f"# Saisonniers {season.value} {year}")
 
     for format, format_medias in medias_format.items():

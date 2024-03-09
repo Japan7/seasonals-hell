@@ -9,7 +9,6 @@ license = {file = "LICENSE"}
 dependencies = [
     "pydantic",
     "requests",
-    "toolz",
     "typer",
 ]
 
